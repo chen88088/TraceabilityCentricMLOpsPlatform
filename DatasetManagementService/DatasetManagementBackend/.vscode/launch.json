@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: FastAPI",
+            "type": "python",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": ["main:app", "--reload", "--host", "0.0.0.0", "--port", "8082"],
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/DatasetManagementService"
+            },
+            "python": "/home/pongesheng/thesis/UnifiedManagementService/DatasetManagementService/ENV_DatasetManagementService/bin/python"
+        }
+    ]
+}

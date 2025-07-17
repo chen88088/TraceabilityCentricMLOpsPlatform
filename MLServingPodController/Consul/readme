@@ -1,0 +1,11 @@
+```
+$ helm upgrade --install consul hashicorp/consul \
+  --namespace consul \
+  --create-namespace \
+  -f consul-values.yaml
+
+```
+
+```
+$ helm uninstall consul  -n ml-serving
+```

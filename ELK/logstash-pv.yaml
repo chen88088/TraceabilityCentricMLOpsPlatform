@@ -1,0 +1,22 @@
+# logstash-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: logstash-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: "/disk/thesis/elk/logstash/data"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - worker1  # ← 你要跑 Logstash 的節點

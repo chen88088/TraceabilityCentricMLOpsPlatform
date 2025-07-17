@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-kafka-topic
+  namespace: kafka
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-topic
+          image: wurstmeister/kafka
+          command:
+            - /bin/sh
+            - -c
+            - |
+              /opt/kafka/bin/kafka-topics.sh \
+                --create \
+                --bootstrap-server kafka-service:9092 \
+                --replication-factor 1 \
+                --partitions 1 \
+                --topic test-topic
+      restartPolicy: OnFailure
+
+# 注意：這裡的 bootstrap-server 要對應 Kafka 的 Service 名稱和 Port。

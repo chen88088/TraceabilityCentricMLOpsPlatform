@@ -1,0 +1,12 @@
+/data
+/.idea
+/.ipynb_checkpoints
+*.h5
+/venv
+*pycache*
+*.pyc
+.coverage
+coverage.json
+test/data/train_test/For_training_testing/
+test/data/inference/For_training_testing/
+test/data/inference/saved_model_and_prediction

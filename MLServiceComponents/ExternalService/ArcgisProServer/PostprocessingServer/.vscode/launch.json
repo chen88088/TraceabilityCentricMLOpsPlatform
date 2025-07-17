@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Uvicorn",
+            "type": "python",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "PostprocessingServiceServer:app",
+                "--reload",
+                "--host", "10.52.52.136",
+                "--port", "8005"
+            ],
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "pythonPath": "C:/Users/chen88088/Desktop/thesis_project/ArcgisProServer/PostprocessingServer/VENV_POSTPROCESSING/Scripts/python.exe"
+        }
+    ]
+}

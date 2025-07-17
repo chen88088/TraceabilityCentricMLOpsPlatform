@@ -1,0 +1,33 @@
+# 更改下方路徑即可 Need to change the path
+# workspace:  ArcGIS project .gdb path
+# Tool_box:   ArcGIS toolboxes .tbx path
+# directory:  Github Download Project path
+# sql_query:  set what to classify crop
+
+workspace = r"C:\Users\Perry\Documents\ArcGIS\Projects\PNGOutput\PNGOutput.gdb"
+Tool_box = r"c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Conversion Tools.tbx"
+directory = r"D:\1111_work\NCU-RSS-Predict-Postprocessing"
+Predict_True_Lable = "'水稻'"
+Predict_False_Lable = "'非水稻'"
+SHP_Path = r"SHP"
+IMG_Path = r'IMG'
+TIF_Path = r'TIF'
+#--------------------------DON'T CHANGE anything below----------------------------------#
+debug=False
+sql_query = "MEAN > 123"
+raster_Mask_Path =   directory +"/raster_Mask"#
+raster_PNG_Path = r'raster_PNG'#
+raster_PGW_Path = r'raster_PGW'
+Prediction_SHP_Result_Path = directory + '/Prediction_SHP_Result'
+class_field = 'Label_Num'
+label_num_2_class={
+            "10112":"水稻",
+            "10113":"水稻",
+            "10114":"非水稻",
+            "10200":"非水稻",
+            "90100":"非水稻",
+            "90200":"非水稻",
+            "99900":"非水稻",        
+        }
+
+prediction_pickle_save_path= directory + '/prediction_pickle'

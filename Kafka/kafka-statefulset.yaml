@@ -1,0 +1,75 @@
+# Headless Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-headless
+  namespace: kafka
+spec:
+  clusterIP: None
+  selector:
+    app: kafka
+  ports:
+    - name: kafka
+      port: 9092
+---
+# Kafka StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+  namespace: kafka
+spec:
+  serviceName: kafka-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      securityContext:
+        fsGroup: 1001
+      containers:
+        - name: kafka
+          image: bitnami/kafka:3.7.0
+          ports:
+            - containerPort: 9092
+              name: kafka
+          env:
+            - name: KAFKA_KRAFT_MODE
+              value: "false"
+            - name: KAFKA_CFG_ZOOKEEPER_CONNECT
+              value: zk-cs.kafka.svc.cluster.local:2181
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: KAFKA_CFG_BROKER_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: ALLOW_PLAINTEXT_LISTENER
+              value: "yes"
+          command:
+            - /bin/bash
+            - -c
+            - |
+              export BROKER_ID=$(echo ${POD_NAME##*-})
+              export KAFKA_CFG_BROKER_ID=$BROKER_ID
+              export KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+              export KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://${POD_NAME}.kafka-headless.kafka.svc.cluster.local:9092
+              exec /opt/bitnami/scripts/kafka/entrypoint.sh /opt/bitnami/scripts/kafka/run.sh
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /bitnami/kafka
+  volumeClaimTemplates:
+    - metadata:
+        name: kafka-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: local-storage

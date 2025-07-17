@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: airflow-webserver-nodeport
+  namespace: airflow
+spec:
+  type: NodePort
+  selector:
+    component: webserver  # 或 match airflow-webserver 的 label，根據你實際情況修改
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      nodePort: 30080  # 你可以自定義，只要在 30000–32767 之間

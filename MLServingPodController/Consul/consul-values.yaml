@@ -1,0 +1,15 @@
+ui:
+  service:
+    type: NodePort
+    nodePort:
+      http: 30850
+
+server:
+  service:
+    type: NodePort
+    nodePort:
+      http: 31850
+
+server:
+  storage: 1Gi
+  storageClass: nfs-storage

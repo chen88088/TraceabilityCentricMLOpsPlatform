@@ -1,0 +1,33 @@
+elasticsearchHosts: "https://elasticsearch-master.elk.svc:9200"
+elasticsearchCredentialSecret: "elk-kibana-credentials"
+protocol: https
+
+kibanaConfig:
+  kibana.yml: |
+    elasticsearch.hosts: ["https://elasticsearch-master.elk.svc:9200"]
+    elasticsearch.ssl.verificationMode: "none"
+
+auth:
+  enabled: false
+
+fleet:
+  enabled: false
+
+xpack:
+  fleet:
+    enabled: false
+
+readinessProbe:
+  httpGet:
+    path: /app/kibana
+    port: 5601
+    scheme: HTTP
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 3
+  failureThreshold: 3
+
+service:
+  type: NodePort
+  nodePort: 30601

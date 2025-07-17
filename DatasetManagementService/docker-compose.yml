@@ -1,0 +1,68 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:15
+    container_name: dataset_management_service_db
+    restart: always
+    environment:
+      POSTGRES_USER: dataset_admin
+      POSTGRES_PASSWORD: dataset_password
+      POSTGRES_DB: dataset_management_service_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - dataset_management_service_data:/var/lib/postgresql/data
+    networks:
+      - dataset_management_service_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dataset_admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: dataset_management_service_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    networks:
+      - dataset_management_service_network
+    depends_on:
+      - db
+
+  backend:
+    build:
+      context: ./DatasetManagementBackend
+      dockerfile: Dockerfile
+    container_name: dataset_management_service_backend
+    restart: always
+    ports:
+      - "8088:8088"
+    networks:
+      - dataset_management_service_network
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./DatasetManagementFrontend  # 前端程式碼路徑
+      dockerfile: Dockerfile                 # React 的 Dockerfile
+    container_name: dataset_management_service_frontend
+    restart: always
+    ports:
+      - "5173:5173"    # Vite 預設埠號
+    networks:
+      - dataset_management_service_network
+    depends_on:
+      - backend
+
+volumes:
+  dataset_management_service_data:
+
+networks:
+  dataset_management_service_network:

@@ -1,0 +1,59 @@
+replicas: 1
+
+persistence:
+  enabled: true
+
+logstashConfig:
+  logstash.yml: |
+    http.host: "0.0.0.0"
+    xpack.monitoring.enabled: false
+    xpack.management.enabled: false
+    config.reload.automatic: true
+
+logstashPipeline:
+  logstash.conf: |
+    input {
+      kafka {
+        bootstrap_servers => "kafka-0.kafka-headless.kafka.svc.cluster.local:9092,kafka-1.kafka-headless.kafka.svc.cluster.local:9092,kafka-2.kafka-headless.kafka.svc.cluster.local:9092"
+        topics => ["test-log"]
+        group_id => "logstash-consumer"
+        codec => "plain"
+        auto_offset_reset => "latest"
+      }
+    }
+    filter {
+      json {
+        source => "message"
+      }
+
+      date {
+        match => ["timestamp", "ISO8601"]
+        target => "@timestamp"
+      }
+    }
+    output {
+      elasticsearch {
+        hosts => ["https://elasticsearch-master.elk.svc.cluster.local:9200"]
+        index => "test-logs-%{+YYYY.MM.dd}"
+        ssl => true
+        ssl_certificate_verification => false
+        user => "elastic"
+        password => "NjeS5rjkgMpeHdEl"
+      }
+      stdout {
+        codec => rubydebug
+      }
+    }
+
+extraEnvs:
+  - name: ELASTICSEARCH_HOSTS
+    value: "https://elasticsearch-master.elk.svc.cluster.local:9200"
+
+volumeClaimTemplate:
+  storageClassName: local-storage
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 5Gi
+
+  logLevel: info

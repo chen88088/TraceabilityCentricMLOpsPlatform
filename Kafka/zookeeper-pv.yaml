@@ -1,0 +1,73 @@
+# zookeeper-pv.yaml
+
+# zookeeper-0 對應 worker1
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: zookeeper-pv-0
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /disk/thesis/zookeeper/zookeeper-0
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - worker1
+
+# zookeeper-1 對應 worker2
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: zookeeper-pv-1
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /disk/thesis/zookeeper/zookeeper-1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - worker2
+
+# zookeeper-2 對應 gpu-worker
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: zookeeper-pv-2
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /disk/thesis/zookeeper/zookeeper-2
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - gpu-worker

@@ -1,0 +1,10 @@
+numpy
+tensorflow
+matplotlib
+scikit-learn
+opencv-python
+openpyxl
+tensorflow_datasets
+pillow
+scikit-image
+focal-loss
